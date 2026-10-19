@@ -1,0 +1,20 @@
+SUBJECT: Automation proposal for {business_name}
+
+Hi {business_name} team,
+
+This is a sample outreach template. Replace it with your own message.
+
+AI voice and chat assistants can help restaurants and hotels reduce missed calls and unanswered enquiries:
+
+- 24/7 availability for calls and messages, including after closing hours
+- Instant reservation booking and confirmation
+- Answers to common questions (opening hours, menu, pricing, room options)
+- Automatic follow-ups so no enquiry is missed
+- Less repetitive work for your front-desk team
+
+Would you be open to a short call this week to see if this fits {business_name}?
+
+Best regards,
+Your Name
+Your Title, Your Company
+you@example.com

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Your Company - Follow-ups</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, Arial, sans-serif; background: #f7f7f9; margin: 0; padding: 40px; color: #222; }
+  .container { max-width: 720px; margin: 0 auto; }
+  h1 { color: #3B7DD8; }
+  .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .due-count { font-size: 40px; font-weight: bold; color: #F06A1A; }
+  button { background: #F06A1A; color: white; border: none; padding: 12px 22px; border-radius: 8px; font-size: 15px; cursor: pointer; }
+  button:disabled { background: #ccc; cursor: not-allowed; }
+  a.back { color: #3B7DD8; text-decoration: none; font-size: 14px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 14px; }
+  th, td { text-align: left; padding: 8px; border-bottom: 1px solid #eee; }
+  #log { background: #111; color: #0f0; font-family: monospace; font-size: 13px; padding: 14px; border-radius: 8px; height: 200px; overflow-y: auto; margin-top: 16px; }
+  .progress-bar { background: #eee; border-radius: 6px; height: 10px; overflow: hidden; margin-top: 10px; }
+  .progress-fill { background: #3B7DD8; height: 100%; width: 0%; transition: width 0.3s; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a class="back" href="/">&larr; Back to main dashboard</a>
+  <h1>Follow-ups</h1>
+
+  <div class="card">
+    <div>Leads due for a follow-up today:</div>
+    <div class="due-count" id="dueCount">-</div>
+    <button id="sendBtn" onclick="startFollowups()">Send Due Follow-ups</button>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div id="log"></div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Preview</h3>
+    <table id="previewTable">
+      <thead><tr><th>Business</th><th>Email</th><th>Next Stage</th><th>Last Sent</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+async function loadDue() {
+  const res = await fetch('/api/followups/due');
+  const data = await res.json();
+  document.getElementById('dueCount').textContent = data.due_count;
+  const tbody = document.querySelector('#previewTable tbody');
+  tbody.innerHTML = '';
+  data.preview.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${r.business_name}</td><td>${r.email}</td><td>#${r.next_stage}</td><td>${r.last_sent}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+async function startFollowups() {
+  const btn = document.getElementById('sendBtn');
+  btn.disabled = true;
+  const res = await fetch('/api/followup/start', { method: 'POST' });
+  const data = await res.json();
+  if (!data.ok) {
+    alert(data.error || 'Could not start follow-up job');
+    btn.disabled = false;
+    return;
+  }
+  pollStatus();
+}
+
+async function pollStatus() {
+  const res = await fetch('/api/followup/status');
+  const s = await res.json();
+  const log = document.getElementById('log');
+  log.innerHTML = s.log.map(l => `<div>${l}</div>`).join('');
+  log.scrollTop = log.scrollHeight;
+  const pct = s.total > 0 ? Math.round((s.sent_count / s.total) * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+
+  if (s.running) {
+    setTimeout(pollStatus, 1500);
+  } else {
+    document.getElementById('sendBtn').disabled = false;
+    loadDue();
+  }
+}
+
+loadDue();
+</script>
+</body>
+</html>

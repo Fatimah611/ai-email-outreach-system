@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Your Company Email Marketing</title>
+<style>
+  :root {
+    --orange: #F06A1A;
+    --blue: #3B7DD8;
+    --bg: #f7f8fa;
+    --card: #ffffff;
+    --text: #1f2430;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --green: #16a34a;
+    --red: #dc2626;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  header {
+    background: linear-gradient(90deg, var(--orange), var(--blue));
+    color: white;
+    padding: 22px 32px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  header .logo {
+    width: 40px; height: 40px;
+    background: white;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+    color: var(--orange);
+    font-size: 18px;
+  }
+  header h1 { font-size: 20px; margin: 0; }
+  header p { margin: 2px 0 0; font-size: 13px; opacity: 0.9; }
+  header .header-right {
+    margin-left: auto;
+  }
+  header .nav-btn {
+    background: rgba(255,255,255,0.18);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  header .nav-btn:hover {
+    background: rgba(255,255,255,0.3);
+  }
+
+  .container {
+    max-width: 980px;
+    margin: 24px auto;
+    padding: 0 20px 60px;
+    display: grid;
+    gap: 20px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+  }
+  .card h2 {
+    font-size: 16px;
+    margin: 0 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h2 .badge {
+    font-size: 11px;
+    background: var(--bg);
+    color: var(--muted);
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-weight: 500;
+  }
+  label {
+    display: block;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 5px;
+    margin-top: 12px;
+  }
+  label:first-child { margin-top: 0; }
+  input[type=text], input[type=password], input[type=number], textarea {
+    width: 100%;
+    padding: 9px 11px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    background: #fcfcfd;
+  }
+  textarea { resize: vertical; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  button {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  button:hover { opacity: 0.9; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-primary { background: var(--orange); color: white; }
+  .btn-secondary { background: var(--blue); color: white; }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+
+  .btn-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+
+  .dropzone {
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    text-align: center;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .dropzone.drag { border-color: var(--orange); background: #fff7f1; }
+
+  .stats { display: flex; gap: 24px; margin-bottom: 10px; }
+  .stat { text-align: center; }
+  .stat .num { font-size: 26px; font-weight: 800; color: var(--blue); }
+  .stat .num.sent { color: var(--green); }
+  .stat .label { font-size: 12px; color: var(--muted); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+  th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; }
+  tr:hover { background: #fafafa; }
+  .status-pill { padding: 2px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .status-sent { background: #dcfce7; color: var(--green); }
+  .status-pending { background: #f1f5f9; color: var(--muted); }
+  .status-failed { background: #fee2e2; color: var(--red); }
+  .status-skipped { background: #fef3c7; color: #92400e; }
+
+  #log {
+    background: #0f172a;
+    color: #d1fae5;
+    font-family: "Consolas", monospace;
+    font-size: 12.5px;
+    border-radius: 10px;
+    padding: 14px;
+    height: 220px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+  }
+  .progress-bar-bg {
+    background: var(--border);
+    border-radius: 20px;
+    height: 8px;
+    overflow: hidden;
+    margin-top: 10px;
+  }
+  .progress-bar-fill {
+    background: var(--orange);
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s;
+  }
+  .toast {
+    position: fixed;
+    bottom: 20px; right: 20px;
+    background: var(--text);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.25s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .small { font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">AT</div>
+  <div>
+    <h1>Your Company Email Marketing</h1>
+    <p>Where Intelligence Meets Automation — local sender, runs on your computer</p>
+  </div>
+  <div class="header-right">
+    <a class="nav-btn" href="/followups">Follow-ups →</a>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>1. Sender Settings</h2>
+    <div class="row">
+      <div>
+        <label>Gmail Address</label>
+        <input type="text" id="sender_email" placeholder="you@example.com">
+      </div>
+      <div>
+        <label>Sender Display Name</label>
+        <input type="text" id="sender_name" placeholder="Your Company">
+      </div>
+    </div>
+    <label>Gmail App Password <span class="small">(16-character code, not your normal password)</span></label>
+    <input type="password" id="sender_app_password" placeholder="Leave blank to keep current password">
+    <div class="row">
+      <div>
+        <label>Daily Send Limit</label>
+        <input type="number" id="daily_limit" value="80">
+      </div>
+      <div>
+        <label>Delay Between Emails (seconds)</label>
+        <input type="number" id="delay_seconds" value="8">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="saveSettings()">Save Settings</button>
+      <span id="settings_status" class="small"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>2. Leads File <span class="badge" id="leads_count_badge">0 leads</span></h2>
+    <div class="dropzone" id="dropzone" onclick="document.getElementById('file_input').click()">
+      📄 Click to upload leads.xlsx (or drag & drop here)<br>
+      <span class="small">Needs columns: business_name, email, city (optional: website, category)</span>
+    </div>
+    <input type="file" id="file_input" accept=".xlsx,.xls" style="display:none" onchange="uploadFile(this.files[0])">
+    <div class="stats" style="margin-top:16px">
+      <div class="stat"><div class="num" id="stat_total">0</div><div class="label">Total Leads</div></div>
+      <div class="stat"><div class="num sent" id="stat_sent">0</div><div class="label">Already Sent</div></div>
+      <div class="stat"><div class="num" id="stat_pending">0</div><div class="label">Pending</div></div>
+    </div>
+    <table id="leads_table">
+      <thead><tr><th>Business</th><th>Email</th><th>City</th><th>Status</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>3. Email Template</h2>
+    <label>Subject Line</label>
+    <input type="text" id="tmpl_subject" placeholder="{business_name} — Never miss a patient call again">
+    <label>Body <span class="small">Use {business_name}, {city}, {website}, {category}, {demo_link}, {sender_email}</span></label>
+    <textarea id="tmpl_body" rows="10"></textarea>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="saveTemplate()">Save Template</button>
+      <span id="template_status" class="small"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>4. Send Emails</h2>
+    <div class="btn-row">
+      <button class="btn-outline" onclick="dryRun()">Preview (Dry Run)</button>
+      <button class="btn-secondary" id="send_btn" onclick="startSend()">Send Emails Now</button>
+    </div>
+    <div id="dry_run_results" style="margin-top:14px"></div>
+    <div id="send_progress" style="display:none; margin-top:16px">
+      <div class="small"><span id="progress_text">Sending...</span></div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress_bar"></div></div>
+      <div id="log" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+async function loadSettings() {
+  const r = await fetch('/api/settings');
+  const d = await r.json();
+  document.getElementById('sender_email').value = d.sender_email || '';
+  document.getElementById('sender_name').value = d.sender_name || 'Your Company';
+  document.getElementById('daily_limit').value = d.daily_limit || 80;
+  document.getElementById('delay_seconds').value = d.delay_seconds || 8;
+  document.getElementById('sender_app_password').placeholder = d.has_password ? 'Saved (leave blank to keep)' : 'Enter your 16-character app password';
+}
+
+async function saveSettings() {
+  const payload = {
+    sender_email: document.getElementById('sender_email').value.trim(),
+    sender_name: document.getElementById('sender_name').value.trim(),
+    daily_limit: document.getElementById('daily_limit').value,
+    delay_seconds: document.getElementById('delay_seconds').value,
+    sender_app_password: document.getElementById('sender_app_password').value.trim(),
+  };
+  const r = await fetch('/api/settings', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+  if (r.ok) {
+    showToast('Settings saved');
+    document.getElementById('sender_app_password').value = '';
+    loadSettings();
+  } else {
+    showToast('Failed to save settings');
+  }
+}
+
+async function loadTemplate() {
+  const r = await fetch('/api/template');
+  const d = await r.json();
+  document.getElementById('tmpl_subject').value = d.subject || '';
+  document.getElementById('tmpl_body').value = d.body || '';
+}
+
+async function saveTemplate() {
+  const payload = {
+    subject: document.getElementById('tmpl_subject').value,
+    body: document.getElementById('tmpl_body').value,
+  };
+  const r = await fetch('/api/template', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+  if (r.ok) showToast('Template saved');
+}
+
+async function loadLeads() {
+  const r = await fetch('/api/leads');
+  const d = await r.json();
+  document.getElementById('leads_count_badge').textContent = d.total + ' leads';
+  document.getElementById('stat_total').textContent = d.total;
+  document.getElementById('stat_sent').textContent = d.sent;
+  document.getElementById('stat_pending').textContent = d.total - d.sent;
+
+  const tbody = document.querySelector('#leads_table tbody');
+  tbody.innerHTML = '';
+  d.leads.slice(0, 200).forEach(lead => {
+    const status = (lead.status || 'pending').toLowerCase() || 'pending';
+    const pillClass = status === 'sent' ? 'status-sent' : status === 'failed' ? 'status-failed' : status === 'skipped' ? 'status-skipped' : 'status-pending';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${lead.business_name || ''}</td><td>${lead.email || '<span class="small">missing</span>'}</td><td>${lead.city || ''}</td><td><span class="status-pill ${pillClass}">${status}</span></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+async function uploadFile(file) {
+  if (!file) return;
+  const formData = new FormData();
+  formData.append('file', file);
+  const r = await fetch('/api/leads/upload', {method:'POST', body: formData});
+  const d = await r.json();
+  if (d.ok) {
+    showToast(`Uploaded ${d.total} leads`);
+    loadLeads();
+  } else {
+    showToast('Error: ' + d.error);
+  }
+}
+
+const dz = document.getElementById('dropzone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('drag'));
+dz.addEventListener('drop', e => {
+  e.preventDefault();
+  dz.classList.remove('drag');
+  if (e.dataTransfer.files.length) uploadFile(e.dataTransfer.files[0]);
+});
+
+async function dryRun() {
+  const r = await fetch('/api/dry-run', {method:'POST'});
+  const d = await r.json();
+  const container = document.getElementById('dry_run_results');
+  if (!d.preview.length) {
+    container.innerHTML = '<p class="small">No pending leads to send to.</p>';
+    return;
+  }
+  let html = `<p class="small">${d.preview.length} emails would be sent:</p><table><thead><tr><th>Business</th><th>Email</th><th>Subject</th></tr></thead><tbody>`;
+  d.preview.forEach(p => {
+    html += `<tr><td>${p.business_name}</td><td>${p.sendable ? p.email : '<span style="color:var(--red)">'+p.email+'</span>'}</td><td>${p.subject}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+let statusInterval = null;
+
+async function startSend() {
+  if (!confirm('This will actually send real emails to all pending leads. Continue?')) return;
+  const r = await fetch('/api/send/start', {method:'POST'});
+  const d = await r.json();
+  if (!d.ok) {
+    showToast('Error: ' + d.error);
+    return;
+  }
+  document.getElementById('send_btn').disabled = true;
+  document.getElementById('send_progress').style.display = 'block';
+  document.getElementById('log').textContent = '';
+  statusInterval = setInterval(pollStatus, 1200);
+}
+
+async function pollStatus() {
+  const r = await fetch('/api/send/status');
+  const d = await r.json();
+  const pct = d.total > 0 ? Math.round((d.sent_count / d.total) * 100) : 0;
+  document.getElementById('progress_bar').style.width = pct + '%';
+  document.getElementById('progress_text').textContent = `${d.sent_count} / ${d.total} sent`;
+  document.getElementById('log').textContent = d.log.join('\n');
+  document.getElementById('log').scrollTop = document.getElementById('log').scrollHeight;
+
+  if (d.done) {
+    clearInterval(statusInterval);
+    document.getElementById('send_btn').disabled = false;
+    document.getElementById('progress_text').textContent = `Done — ${d.sent_count} / ${d.total} sent`;
+    loadLeads();
+    showToast('Sending finished');
+  }
+}
+
+loadSettings();
+loadTemplate();
+loadLeads();
+</script>
+
+</body>
+</html>

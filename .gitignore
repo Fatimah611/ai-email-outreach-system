@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+*.xlsx
+*.csv
+*.zip
+credentials.json
+token.json
+node_modules/
+.venv/
+__pycache__/
+build/
+.vercel/
+
